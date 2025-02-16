@@ -1,72 +1,78 @@
-// Імпортуємо необхідні бібліотеки та компоненти
-import React from "react"; // Імпортуємо React для JSX
-import { Formik, Form, Field, ErrorMessage } from "formik"; // Імпортуємо компоненти для роботи з формами через Formik
-import { nanoid } from "nanoid"; // Імпортуємо nanoid для створення унікальних ID
-import * as Yup from "yup"; // Імпортуємо Yup для валідації форми
-import css from "./ContactForm.module.css"; // Імпортуємо CSS модулі для стилізації форми
-import { useDispatch, useSelector } from "react-redux"; // Імпортуємо хоки для роботи з Redux
-import { addContact } from "../../redux/contactsOps"; // Імпортуємо дію для додавання контакту в Redux
-import { selectLoading } from "../../redux/contactsSlice"; // Імпортуємо селектор для отримання статусу завантаження
+import React from "react"; 
+import { Formik, Form, Field, ErrorMessage } from "formik";  // Імпортуємо компоненти Formik для роботи з формою та валідацією
+import { nanoid } from "nanoid";  // Імпортуємо nanoid для генерації унікальних ідентифікаторів
+import * as Yup from "yup";  // Імпортуємо Yup для створення схем валідації
+import css from "./ContactForm.module.css";  // Імпортуємо стилі для форми
+import { useDispatch, useSelector } from "react-redux";  // Імпортуємо хук useDispatch для відправки екшенів та useSelector для отримання стану
+import { addContact } from "../../redux/contactsOps";  // Імпортуємо екшен для додавання контакту
+import { selectLoading } from "../../redux/contactsSlice";  // Імпортуємо селектор для перевірки статусу завантаження
 
-// Оголошуємо компонент ContactForm
 const ContactForm = () => {
-  const dispatch = useDispatch(); // Використовуємо хук для доступу до dispatch
-  const loading = useSelector(selectLoading); // Використовуємо хук для отримання статусу завантаження з Redux
+  const dispatch = useDispatch();  // Отримуємо доступ до dispatch для відправки екшенів
+  const loading = useSelector(selectLoading);  // Отримуємо значення стану loading зі store
 
-  // Оголошуємо схему валідації за допомогою Yup
+  // Створюємо схему валідації для форми за допомогою Yup
   const validationSchema = Yup.object({
-    name: Yup.string().min(3).max(50).required("Required"), // Валідація для поля 'name' (мінімум 3 символи, максимум 50)
-    number: Yup.string()
-      .matches(/^\d+$/, "Only numbers") // Валідація для номера телефону (тільки цифри)
-      .min(3, "Phone number is too short") // Мінімальна довжина номера телефону
-      .max(15, "Phone number is too long") // Максимальна довжина номера телефону
-      .required("Required"), // Обов'язкове поле
+    name: Yup.string()  // Поле "name" повинно бути рядком
+      .min(3, "Name is too short")  // Мінімальна довжина - 3 символи
+      .max(50, "Name is too long")  // Максимальна довжина - 50 символів
+      .required("Required"),  // Поле є обов'язковим
+
+    number: Yup.string()  // Поле "number" повинно бути рядком
+      .matches(/^\d+$/, "Only numbers")  // Тільки цифри
+      .min(3, "Phone number is too short")  // Мінімальна довжина - 3 символи
+      .max(15, "Phone number is too long")  // Максимальна довжина - 15 символів
+      .required("Required"),  // Поле є обов'язковим
   });
 
   return (
-    // Компонент Formik для створення форми з валідацією та обробкою подій
     <Formik
-      initialValues={{ name: "", number: "" }} // Початкові значення для полів форми
-      validationSchema={validationSchema} // Задаємо схему валідації
-      onSubmit={(values, { resetForm }) => { // Обробник при відправці форми
-        const contact = { id: nanoid(), ...values }; // Створюємо новий об'єкт контакту з унікальним ID
-        dispatch(addContact(contact)); // Додаємо контакт в Redux
-        resetForm(); // Очищаємо форму після відправки
+      initialValues={{ name: "", number: "" }}  // Початкові значення для форми
+      validationSchema={validationSchema}  // Призначаємо схему валідації
+      onSubmit={(values, { resetForm }) => {
+        // Обробник події на відправку форми
+        const contact = { id: nanoid(), ...values };  // Створюємо новий контакт з унікальним id
+        dispatch(addContact(contact));  // Відправляємо екшен додавання контакту
+        resetForm();  // Очищаємо форму після успішної відправки
       }}
     >
-      <Form className={css.form}> {/* Основна форма */}
-        {/* Поле для вводу імені контакту */}
+      <Form className={css.form}>  {/* Основна форма */}
+        {/* Група для поля "name" */}
         <div className={css.formGroup}>
-          <label htmlFor="name">Name:</label>
+          <label htmlFor="name">Name:</label>  {/* Мітка для поля "name" */}
           <Field
             id="name"
             name="name"
             type="text"
             autoComplete="name"
-            className={css.input}
+            className={css.input}  // Стилі для поля введення
           />
-          <ErrorMessage className={css.error} name="name" component="div" /> {/* Показуємо помилку для поля 'name' */}
+          <ErrorMessage className={css.error} name="name" component="div" />  {/* Виводимо повідомлення про помилку, якщо є */}
         </div>
-        {/* Поле для вводу номеру телефону */}
+
+        {/* Група для поля "number" */}
         <div className={css.formGroup}>
-          <label htmlFor="number">Number:</label>
+          <label htmlFor="number">Number:</label>  {/* Мітка для поля "number" */}
           <Field
             id="number"
             name="number"
             type="text"
             autoComplete="tel"
-            className={css.input}
+            className={css.input}  // Стилі для поля введення
           />
-          <ErrorMessage className={css.error} name="number" component="div" /> {/* Показуємо помилку для поля 'number' */}
+          <ErrorMessage className={css.error} name="number" component="div" />  {/* Виводимо повідомлення про помилку, якщо є */}
         </div>
-        {/* Кнопка відправки форми */}
+
+        {/* Кнопка для відправки форми */}
         <button type="submit" className={css.button} disabled={loading}>
-          {loading ? "Adding..." : "Add Contact"} {/* Якщо йде завантаження, показуємо "Adding...", інакше "Add Contact" */}
+          {!loading ? "Add Contact" : null} {/* Показуємо текст кнопки тільки коли не йде завантаження */}
         </button>
+
+        {/* Показуємо лоадер, якщо йде завантаження */}
+        {loading && <div className={css.loader}></div>}
       </Form>
     </Formik>
   );
 };
 
-// Експортуємо компонент ContactForm для використання в інших частинах додатку
-export default ContactForm;
+export default ContactForm;  // Експортуємо компонент для використання в інших частинах додатку

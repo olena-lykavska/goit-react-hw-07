@@ -6,14 +6,17 @@ const filtersSlice = createSlice({
   initialState: { name: "" }, // Початковий стан фільтра (порожнє ім'я)
   reducers: {
     // Редюсер для оновлення фільтра (зміна значення name)
-    setFilter(state, action) {
+    changeFilter(state, action) {
       state.name = action.payload; // Оновлюємо фільтр на основі отриманого значення
     },
   },
 });
 
-// Експортуємо дію setFilter для використання в компонентах
-export const { setFilter } = filtersSlice.actions;
+// Додаємо функцію для вибору значення фільтра зі стану
+export const selectNameFilter = (state) => state.filters.name; // Використовуємо state.filters, щоб отримати значення фільтра
+
+// Експортуємо дію changeFilter для використання в компонентах
+export const { changeFilter } = filtersSlice.actions;
 
 // Експортуємо редюсер, щоб підключити до store
 export default filtersSlice.reducer;

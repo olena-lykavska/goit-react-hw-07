@@ -1,7 +1,6 @@
-// Імпортуємо необхідні бібліотеки та компоненти
-import React, { useEffect } from "react"; // Імпортуємо React та useEffect для роботи з життєвим циклом компонента
+import React from "react"; // Імпортуємо React
 import { useDispatch, useSelector } from "react-redux"; // Імпортуємо хоки для роботи з Redux
-import { fetchContacts, deleteContact } from "../../redux/contactsOps"; // Імпортуємо операції для отримання та видалення контактів
+import { deleteContact } from "../../redux/contactsOps"; // Імпортуємо операцію для видалення контакту
 import { selectFilteredContacts } from "../../redux/contactsSlice"; // Імпортуємо селектор для вибору фільтрованих контактів
 import ContactItem from "../ContactItem/ContactItem"; // Імпортуємо компонент для відображення окремого контакту
 import css from "./ContactList.module.css"; // Імпортуємо CSS модулі для стилізації списку контактів
@@ -10,11 +9,6 @@ import css from "./ContactList.module.css"; // Імпортуємо CSS моду
 const ContactList = () => {
   const dispatch = useDispatch(); // Хук для доступу до dispatch в Redux
   const contacts = useSelector(selectFilteredContacts); // Отримуємо фільтровані контакти з Redux через селектор
-
-  // Використовуємо useEffect для завантаження контактів при першому рендері компонента
-  useEffect(() => {
-    dispatch(fetchContacts()); // Диспатчимо дію для отримання контактів з сервера чи бази даних
-  }, [dispatch]); // useEffect викликається один раз після першого рендеру
 
   return (
     <ul className={css.list}> {/* Контейнер для списку контактів */}

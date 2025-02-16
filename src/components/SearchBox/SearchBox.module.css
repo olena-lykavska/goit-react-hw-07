@@ -6,6 +6,7 @@
     font-size: 16px;
     text-align: center;
     transition: border 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 32px;
 }
 
 .input:focus {
