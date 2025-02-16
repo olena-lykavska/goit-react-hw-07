@@ -16,7 +16,7 @@ const SearchBox = () => {
       type="text" // Тип поля вводу — текст
       value={filter} // Значення поля встановлюється з Redux (фільтр)
       onChange={(e) => dispatch(changeFilter(e.target.value))} // Оновлюємо фільтр при зміні введеного тексту
-      placeholder="Search contacts" // Текст підказки в полі вводу
+      placeholder="Search contacts by name" // Текст підказки в полі вводу
       className={css.input} // Стилізуємо компонент за допомогою CSS класу
     />
   );
